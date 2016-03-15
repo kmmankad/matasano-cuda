@@ -7,14 +7,18 @@
 # * License: MIT License
 # *
 # */
+
+CC := pgcc
 TARGET := hex2base64
-OBJECTS := $(patsubst %.c,%.o, $(wildcard *.c))
-CXXFLAGS := -I. -g
+OBJECTS := $(patsubst %.c,%.obj, $(wildcard *.c))
+CCFLAGS := -I. -g
+ACCFLAGS := -fast -Minfo -acc -ta=nvidia
+EXE := exe
 
-all: clean $(TARGET)
+all: clean $(TARGET).$(EXE)
 
-$(TARGET): $(OBJECTS)
-	gcc -g -o $@ $^
+$(TARGET).$(EXE): $(wildcard *.c)
+	$(CC) $(CCFLAGS) $(ACCFLAGS) -o $@ $^
 
 clean:
-	\rm -rf $(OBJECTS) $(TARGET)
+	rm -rf $(OBJECTS) $(TARGET).$(EXE) $(TARGET).dwf $(TARGET).pdb

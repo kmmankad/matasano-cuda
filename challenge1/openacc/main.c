@@ -1,7 +1,7 @@
 /* 
  * Name: Matasano Challenge 1 (hex2base64)
  * File: main.cpp
- * Description: Simple program to demo the encode 
+ * Description: Simple OpenACC based program to demo the encode 
  * 		of a string of hex digits to base64
  * 		using the hex2base64 class
  * Author: kmmankad (kmmankad@gmail.com)
@@ -9,6 +9,7 @@
  *
  */
 #include <stdio.h>
+#include <tchar.h>
 #include "hex2base64.h"
 
 // Function which prints the usage of this executable
@@ -19,7 +20,7 @@ void print_usage()
 	printf("	[input] and [output] are the input and output files, respectively.\n");
 }
 
-int main (int argc, char* argv[]){
+int _tmain(int argc, _TCHAR* argv[]){
 
 	// If we have the wrong number of args,
 	// print the usage banner and exit.
@@ -29,7 +30,6 @@ int main (int argc, char* argv[]){
 	}
 
 	// argv[1] is our input file
-	// argv[2] is our output file
 	// Open the input in binary mode.
 	FILE* instream = fopen(argv[1], "rb");
 	if (instream == NULL)
@@ -39,6 +39,7 @@ int main (int argc, char* argv[]){
 	}
 	
 	// Open the output in binary mode.
+	// argv[2] is our output file
 	FILE* outstream = fopen(argv[2], "wb");
 	if (outstream == NULL)
 	{
@@ -46,6 +47,9 @@ int main (int argc, char* argv[]){
 		exit(-1);
 	}
 
+	// Set & Initialize the device
+	acc_set_device( acc_device_nvidia );
+	acc_init(acc_device_nvidia );
 	// Call the encode function which will
 	// fread the input, encode that block
 	// and fwrite the output
@@ -54,5 +58,10 @@ int main (int argc, char* argv[]){
 	// Close both file handles
 	fclose(instream);
 	fclose(outstream);
+	
+	// Shutdown the device
+	// This is needed for clean profiling traces.
+	acc_shutdown(acc_device_nvidia);
+	
 	return 0;
 }

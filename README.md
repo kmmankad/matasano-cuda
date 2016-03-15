@@ -1,2 +1,2 @@
 # matasano-cuda
-CUDA Implementation of the popular Matasano Cryptography challenges
+CUDA/OpenACC implementations of the popular [Matasano Cryptography challenges](http://cryptopals.com/)
