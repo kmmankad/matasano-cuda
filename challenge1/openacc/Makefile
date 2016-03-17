@@ -12,7 +12,7 @@ CC := pgcc
 TARGET := hex2base64
 OBJECTS := $(patsubst %.c,%.obj, $(wildcard *.c))
 CCFLAGS := -I. -g
-ACCFLAGS := -fast -Minfo -acc -ta=nvidia
+ACCFLAGS := -fast -Minfo -acc -ta=nvidia 
 EXE := exe
 
 all: clean $(TARGET).$(EXE)
@@ -21,4 +21,4 @@ $(TARGET).$(EXE): $(wildcard *.c)
 	$(CC) $(CCFLAGS) $(ACCFLAGS) -o $@ $^
 
 clean:
-	rm -rf $(OBJECTS) $(TARGET).$(EXE) $(TARGET).dwf $(TARGET).pdb
+	rm -rf $(OBJECTS) $(TARGET).$(EXE) $(TARGET).dwf $(TARGET).pdb 

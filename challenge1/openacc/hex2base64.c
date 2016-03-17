@@ -12,7 +12,7 @@
 #include "openacc.h"
 #include "hex2base64.h"
 
-/// \brief encode reads a file block-by-block, and 
+///  \brief encode reads a file block-by-block, and 
 ///		   encodes each block of ASCII to Base64 via the \c encode_block() function.
 ///  \params input_fp File handle to the input file
 ///  \params output_fp File handle to the output file
@@ -62,14 +62,14 @@ void encode(FILE* input_fp, FILE* output_fp){
 }
 
 
-/// \brief encode_block encodes a block of ASCII to Base64 function.
+///  \brief encode_block encodes a block of ASCII to Base64 function.
 ///		   We process 3 bytes at a time, which produce 4 bytes of Base64
 ///		   encoded data. We lookup the index of the Base64 character from 
 ///		   a static LUT, \c base64_LUT
 ///  \params input_fp File handle to the input file
 ///  \params output_fp File handle to the output file
 ///  \return void
-unsigned int encode_block( char* input, unsigned int size, char* output){
+unsigned int encode_block( char *restrict input, unsigned int size, char *restrict output){
 	// Variables for timekeeping
     timestruct t1,t2;
 	long long time_elapsed;
@@ -86,9 +86,9 @@ unsigned int encode_block( char* input, unsigned int size, char* output){
 	// Mark the start time
 	gettime( &t1 );
 	
-	#pragma acc data present(input[0:size]), present(base64_LUT[64])
-	#pragma acc data create(decoded_octets[4])
-	#pragma acc loop independent
+	#pragma acc data present(input[0:size]), present(base64_LUT[64]), copyout(output[0:4*size/3])
+	#pragma acc kernels 
+	#pragma acc loop private(decoded_octets, k) independent
 	for (i=0; i<size; i=i+3){ // Process 3 bytes in one iteration
 		// X X X X X X X X Y Y Y Y  Y Y Y Y Z Z  Z Z Z Z Z Z 
 		// |    o1   |    o2       |   o3       |  o4
@@ -143,6 +143,6 @@ unsigned int encode_block( char* input, unsigned int size, char* output){
 	printf("encode_block: %03ld microseconds\n", time_elapsed );
 	
 	// Return the code length
-	return (k+4);
+	return ((4*size)/3);
 }
 

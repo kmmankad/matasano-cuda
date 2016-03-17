@@ -28,6 +28,6 @@ typedef struct timeval timestruct;
 //Function to encode a hex string into base64 string
 void encode(FILE* input_fp, FILE* output_fp);
 unsigned int encode_block(char* input, unsigned int size, char* output);
-static const char* base64_LUT = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+\\";
+static const char *restrict base64_LUT = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+\\";
 
 #endif //HEX2BASE64
